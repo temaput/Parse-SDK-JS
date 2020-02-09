@@ -618,7 +618,7 @@ class ParseUser extends ParseObject {
    * @return {Promise} A promise that is fulfilled with the user when
    *     the login completes.
    */
-  static logIn(username: string, password: string, options?: FullOptions) {
+  static logIn(username: string, password: string, region: string, options?: FullOptions) {
     if (typeof username !== 'string') {
       return Promise.reject(
         new ParseError(
@@ -635,7 +635,7 @@ class ParseUser extends ParseObject {
       );
     }
     const user = new this();
-    user._finishFetch({ username: username, password: password });
+    user._finishFetch({ username: username, password: password, region: region });
     return user.logIn(options);
   }
 
@@ -1024,7 +1024,8 @@ const DefaultController = {
     const stateController = CoreManager.getObjectStateController();
     const auth = {
       username: user.get('username'),
-      password: user.get('password')
+      password: user.get('password'),
+      region: user.get('region')
     };
     return RESTController.request(
       'GET', 'login', auth, options
